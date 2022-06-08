@@ -196,7 +196,7 @@ def trainer(train_loader, valid_loader, model, config, device):
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 config = {
     'seed': 5602,  # seed number
-    'select_all': True,  # Whether to use all features.
+    'select_all': False,  # Whether to use all features.
     'valid_ratio': 0.2,  # validation_size = train_size * valid_ratio
     'n_epochs': 3000,  # Number of epochs.
     'batch_size': 256,
