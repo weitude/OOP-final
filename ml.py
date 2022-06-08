@@ -97,9 +97,9 @@ class My_Model(nn.Module):
         self.layers = nn.Sequential(
             nn.Linear(input_dim, 32),
             nn.SiLU(),
-            nn.Linear(32, 16),
+            nn.Linear(32, 17),
             nn.SiLU(),
-            nn.Linear(16, 1)
+            nn.Linear(17, 1)
         )
 
     def forward(self, x):
