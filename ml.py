@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-
 COVID-19 Cases Prediction (Regression)
 
 Objectives:
 * Solve a regression problem with deep neural networks (DNN).
-* Understand basic DNN training tips.
-* Familiarize yourself with PyTorch.
-
-# Download data
-If the Google Drive links below do not work, you can download data from [Kaggle](https://www.kaggle.com/t/a3ebd5b5542f0f55e828d4f00de8e59a), and upload data manually to the workspace.
 """
 
-"""# Import packages"""
+"""Import packages"""
 
 # Numerical Operations
 import math
@@ -34,14 +28,11 @@ from torch.utils.data import Dataset, DataLoader, random_split
 # For plotting learning curve
 from torch.utils.tensorboard import SummaryWriter
 
-"""# Some Utility Functions
-
-You do not need to modify this part.
-"""
+"""Some Utility Functions"""
 
 
 def same_seed(seed):
-    """Fixes random number generator seeds for reproducibility."""
+    # Fixes random number generator seeds for reproducibility.
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
     np.random.seed(seed)
@@ -51,7 +42,7 @@ def same_seed(seed):
 
 
 def train_valid_split(data_set, valid_ratio, seed):
-    """Split provided training data into training set and validation set"""
+    # Split provided training data into training set and validation set
     valid_set_size = int(valid_ratio * len(data_set))
     train_set_size = len(data_set) - valid_set_size
     train_set, valid_set = random_split(data_set, [train_set_size, valid_set_size],
@@ -60,7 +51,7 @@ def train_valid_split(data_set, valid_ratio, seed):
 
 
 def predict(test_loader, model, device):
-    model.eval()  # Set your model to evaluation mode.
+    model.eval()  # Set model to evaluation mode.
     preds = []
     for x in tqdm(test_loader):
         x = x.to(device)
@@ -71,7 +62,7 @@ def predict(test_loader, model, device):
     return preds
 
 
-"""# Dataset"""
+"""Dataset"""
 
 
 class COVID19Dataset(Dataset):
@@ -97,9 +88,7 @@ class COVID19Dataset(Dataset):
         return len(self.x)
 
 
-"""# Neural Network Model
-Try out different model architectures by modifying the class below.
-"""
+"""Neural Network Model"""
 
 
 class My_Model(nn.Module):
@@ -119,13 +108,11 @@ class My_Model(nn.Module):
         return x
 
 
-"""# Feature Selection
-Choose features you deem useful by modifying the function below.
-"""
+"""Feature Selection"""
 
 
 def select_feat(train_data, valid_data, test_data, select_all=True):
-    """Selects useful features to perform regression"""
+    # Selects useful features to perform regression
     y_train, y_valid = train_data[:, -1], valid_data[:, -1]
     raw_x_train, raw_x_valid, raw_x_test = train_data[:, :-1], valid_data[:, :-1], test_data
 
@@ -137,15 +124,13 @@ def select_feat(train_data, valid_data, test_data, select_all=True):
     return raw_x_train[:, feat_idx], raw_x_valid[:, feat_idx], raw_x_test[:, feat_idx], y_train, y_valid
 
 
-"""# Training Loop"""
+"""Training Loop"""
 
 
 def trainer(train_loader, valid_loader, model, config, device):
-    criterion = nn.MSELoss(reduction='mean')  # Define your loss function, do not modify this.
+    criterion = nn.MSELoss(reduction='mean')
 
-    # Define your optimization algorithm.
-    # TODO: Please check https://pytorch.org/docs/stable/optim.html to get more available algorithms.
-    # TODO: L2 regularization (optimizer(weight decay...) or implement by your self).
+    # L2 regularization
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'], weight_decay=0.001)
 
     writer = SummaryWriter()  # Writer of tensoboard.
@@ -156,15 +141,15 @@ def trainer(train_loader, valid_loader, model, config, device):
     n_epochs, best_loss, step, early_stop_count = config['n_epochs'], math.inf, 0, 0
 
     for epoch in range(n_epochs):
-        model.train()  # Set your model to train mode.
+        model.train()  # Set model to train mode.
         loss_record = []
 
-        # tqdm is a package to visualize your training progress.
+        # tqdm is a package to visualize training progress.
         train_pbar = tqdm(train_loader, position=0, leave=True)
 
         for x, y in train_pbar:
             optimizer.zero_grad()  # Set gradient to zero.
-            x, y = x.to(device), y.to(device)  # Move your data to device.
+            x, y = x.to(device), y.to(device)  # Move data to device.
             pred = model(x)
             loss = criterion(pred, y)
             loss.backward()  # Compute gradient(backpropagation).
@@ -179,7 +164,7 @@ def trainer(train_loader, valid_loader, model, config, device):
         mean_train_loss = sum(loss_record) / len(loss_record)
         writer.add_scalar('Loss/train', mean_train_loss, step)
 
-        model.eval()  # Set your model to evaluation mode.
+        model.eval()  # Set model to evaluation mode.
         loss_record = []
         for x, y in valid_loader:
             x, y = x.to(device), y.to(device)
@@ -195,7 +180,7 @@ def trainer(train_loader, valid_loader, model, config, device):
 
         if mean_valid_loss < best_loss:
             best_loss = mean_valid_loss
-            torch.save(model.state_dict(), config['save_path'])  # Save your best model
+            torch.save(model.state_dict(), config['save_path'])  # Save best model
             print('Saving model with loss {:.3f}...'.format(best_loss))
             early_stop_count = 0
         else:
@@ -206,25 +191,21 @@ def trainer(train_loader, valid_loader, model, config, device):
             return
 
 
-"""# Configurations
-`config` contains hyper-parameters for training and the path to save your model.
-"""
+"""Configurations"""
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 config = {
-    'seed': 5602,  # Your seed number, you can pick your lucky number. :)
+    'seed': 5602,  # seed number
     'select_all': True,  # Whether to use all features.
     'valid_ratio': 0.2,  # validation_size = train_size * valid_ratio
     'n_epochs': 3000,  # Number of epochs.
     'batch_size': 256,
     'learning_rate': 1e-5,
     'early_stop': 1000,  # If model has not improved for this many consecutive epochs, stop training.
-    'save_path': './models/model.ckpt'  # Your model will be saved here.
+    'save_path': './models/model.ckpt'  # Model will be saved here.
 }
 
-"""# Dataloader
-Read data from files and set up training, validation, and testing sets. You do not need to modify this part.
-"""
+"""Dataloader"""
 
 # Set seed for reproducibility
 same_seed(config['seed'])
@@ -254,29 +235,16 @@ train_loader = DataLoader(train_dataset, batch_size=config['batch_size'], shuffl
 valid_loader = DataLoader(valid_dataset, batch_size=config['batch_size'], shuffle=True, pin_memory=True)
 test_loader = DataLoader(test_dataset, batch_size=config['batch_size'], shuffle=False, pin_memory=True)
 
-"""# Start training!"""
+"""Start training!"""
 
-model = My_Model(input_dim=x_train.shape[1]).to(device)  # put your model and data on the same computation device.
+model = My_Model(input_dim=x_train.shape[1]).to(device)  # put model and data on the same computation device.
 trainer(train_loader, valid_loader, model, config, device)
 
-"""# Plot learning curves with `tensorboard` (optional)
-
-`tensorboard` is a tool that allows you to visualize your training progress.
-
-If this block does not display your learning curve, please wait for few minutes, and re-run this block. It might take some time to load your logging information.
-"""
-
-# Commented out IPython magic to ensure Python compatibility.
-# %reload_ext tensorboard
-# %tensorboard --logdir=./runs/
-
-"""# Testing
-The predictions of your model on testing set will be stored at `pred.csv`.
-"""
+"""Testing"""
 
 
 def save_pred(preds, file):
-    """ Save predictions to specified file """
+    # Save predictions to specified file
     with open(file, 'w') as fp:
         writer = csv.writer(fp)
         writer.writerow(['id', 'tested_positive'])
