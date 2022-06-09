@@ -8,13 +8,15 @@
 
 而且 Machine Learning 可以很好地跟 Python 互相搭配
 
-因此選擇了這個主題，希望利用 Python 及 ML 的技術，來預測未來 COVID-19 確診人數
+因此選擇了這個主題，希望**利用 Python 及 ML 的技術，來預測未來 COVID-19 確診人數**
 
 進而提早做出準備，更加穩定地控管疫情
 
 ---
 
 # 方法與素材
+
+repo: [weitude/OOP-final: final project (github.com)](https://github.com/weitude/OOP-final)
 
 主要素材有兩個檔案：`covid.test.csv` 以及 `covid.train.csv`
 
@@ -44,16 +46,16 @@
 - y 是 output，也就是我們訓練的目標 `label`
 - 我們透過調整 b (bias)、m (weight, 權重)，使我們方程式能接近我們想要的結果
 
-其中為了增加預測的準確性，利用：
-
-[OOP-final/feature_selection.py at main · weitude/OOP-final (github.com)](https://github.com/weitude/OOP-final/blob/main/feature_selection.py)
+其中為了增加預測的準確性，利用 [feature_selection.py](https://github.com/weitude/OOP-final/blob/main/feature_selection.py)
 
 進行資料的預處理，選出幾個相關性較高的 feature，藉此提高準確性
 
-至於我們 `ml.py` 檔中需要利用 pip install 安裝以下 package：
+我們使用的 python 環境為 pyenv 的 3.9.12
 
-```python
+至於 [ml.py](https://github.com/weitude/OOP-final/blob/main/ml.py) 檔中需要利用 pip install 安裝 repo 中的 [requirement.txt](https://github.com/weitude/OOP-final/blob/main/requirements.txt)
 
+```bash
+pip3 install -r requirements.txt
 ```
 
 ---
@@ -94,7 +96,7 @@
 
 ### My_Model
 
-這邊可說是機器學習的核心，透過增加神經網路層數以及類別
+這邊可說是機器學習的核心，透過更改神經網路類別以及層數
 
 最終採用 SiLU 搭配 Linear 的方式進行 DNN 學習
 
@@ -108,7 +110,7 @@
 
 因為要讓機器自己學習，因此我們要設置一個 criterion，這邊設定採用 “mean” 的方式來判斷
 
-為了避免發生 overfitting，所以這邊的 optimizer 採用了 L2 regularization
+為了避免發生 overfitting，所以這邊的 optimizer 採用了 Adam 的 L2 regularization
 
 並設置好 weight_decay
 
@@ -140,13 +142,15 @@
 
 # 結果評測
 
-透過到 Kaggle 這個數據建模和數據分析競賽平台，分析自己的數據
+透過到 [Kaggle](https://www.kaggle.com/competitions/ml2022spring-hw1) 這個數據建模和數據分析競賽平台，分析自己的 [pred.csv](https://github.com/weitude/OOP-final/blob/main/pred.csv) 數據
 
-發現獲得相當好的成績，代表具備極高的準確率
+發現獲得相當好的成績 (0.98676)，代表具備極高的準確率
 
 ---
 
 # 討論與結論
+
+## 討論
 
 ### 應用性
 
@@ -154,9 +158,7 @@
 
 因此若能利用 Machine Learning 的技術，較為準確地預測未來確診人數
 
-一定會比單純認為等差數列地上升來的有權威性
-
-可以利用此科學數據做出更好的防疫方針
+一定會比單純認為等差數列地上升來的有權威性，可以利用此科學數據做出更好的防疫方針
 
 ### 有效性
 
@@ -174,11 +176,11 @@
 
 這項 final project 我們為了更加全面地活用上課所學
 
-不只使用了前幾週學到的基礎語法（如：if, print, def 等等）
+不只使用了前幾週學到的基礎語法（如：if, print, def 等等），也活用了檔案讀寫
 
 更融合了最後幾週學到的 class, 繼承等等物件導向的核心精神
 
-最後結合了近年十分夯的機器學習主題
+最後結合近年很夯的機器學習主題
 
 透過小組隊友間的討論自學，成功克服種種困難，最終完成了此報告
 
@@ -190,13 +192,29 @@
 
 讓整個班級的同學都能淺顯易懂的了解 Python、套件、物件導向的潛力
 
+## 結論
+
+透過這個 final project，我們組員之間互相協作，除了將整學期的課程融會貫通
+
+在這個資訊發達的時代，為了做出預測結果，更透過網路自學機器學習相關概念
+
+最終成功利用美國先前的問卷調查，成功模擬出一個預測模型
+
+並實際測試若移除了第五天的 tested_positive 值，是否能利用前四天的數值成功預測
+
+最後利用 Mean-Square Error 來判斷與實際數據的誤差，結果是十分精確的
+
 ---
 
 # 參考資料
+
+[virginiakm1988/ML2022-Spring: **Official** 李宏毅 (Hung-yi Lee) 機器學習 Machine Learning 2022 Spring (github.com)](https://github.com/virginiakm1988/ML2022-Spring)
 
 [torch.backends.cudnn.deterministic - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/141063432)
 
 [torch.optim — PyTorch 1.11.0 documentation](https://pytorch.org/docs/stable/optim.html)
 
-[ML2022Spring-hw1 | Kaggle](https://www.kaggle.com/competitions/ml2022spring-hw1)
+[使用pip list和pip freeze的区别？ - 专否 (zhuanfou.com)](https://zhuanfou.com/ask/78332072_063)
+
+[工作站 pyenv (notion.site)](https://www.notion.so/pyenv-c694156da94a4feba0280cad3e57c3b0)
 
