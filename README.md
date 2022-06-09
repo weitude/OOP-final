@@ -52,7 +52,7 @@ repo: [weitude/OOP-final: final project (github.com)](https://github.com/weitude
 
 我們使用的 python 環境為 pyenv 的 3.9.12
 
-至於 [ml.py](https://github.com/weitude/OOP-final/blob/main/ml.py) 檔中需要利用 pip install 安裝 repo 中的 [requirement.txt](https://github.com/weitude/OOP-final/blob/main/requirements.txt)
+至於 [ml.py](https://github.com/weitude/OOP-final/blob/main/ml.py) 檔中需要利用 pip install 安裝 repo 中的 [requirements.txt](https://github.com/weitude/OOP-final/blob/main/requirements.txt)
 
 ```bash
 pip3 install -r requirements.txt
