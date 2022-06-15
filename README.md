@@ -144,7 +144,7 @@ pip3 install -r requirements.txt
 
 透過到 [Kaggle](https://www.kaggle.com/competitions/ml2022spring-hw1) 這個數據建模和數據分析競賽平台，分析自己的 [pred.csv](https://github.com/weitude/OOP-final/blob/main/pred.csv) 數據
 
-發現獲得相當好的成績 (0.98676)，代表具備極高的準確率
+發現獲得相當好的成績 (0.95594)，代表具備極高的準確率
 
 ---
 
